@@ -2,39 +2,30 @@
 import os
 import pandas as pd
 
-
-
-# Prompt user for the new CSV file name
-file_name = input("Enter the name for the new CSV file (without .csv extension): ")
-file_path = os.path.join('cleaned_data', f"{file_name}.csv")
-# Define the column headers for the new CSV file
+new_csv_name = input("Enter the name for the new cleaned CSV file (without extension): ")
+new_csv_name = new_csv_name.strip() + ".csv"
+cleaned_data_dir = "cleaned_data"
+os.makedirs(cleaned_data_dir, exist_ok=True)
 column_headers = ["Interval", "Section No.", "Pin Torque", "Pin Speed"]
-# Ensure the cleaned_data directory exists
-os.makedirs('cleaned_data', exist_ok=True)
+df = pd.DataFrame(columns=column_headers)
+df.to_csv(os.path.join(cleaned_data_dir, new_csv_name), index=False)
 
-csv_files = [f for f in os.listdir('data') if f.endswith('.csv') and f != f"{file_name}.csv"]
-dfs = []
-
-for csv_file in csv_files:
-    csv_path = os.path.join('data', csv_file)
-    df = pd.read_csv(csv_path, header=None)
-    # Find the header row
-    header_row = None
-    for idx, row in df.iterrows():
-        if (
-            str(row[0]).strip() == "Interval"
-            and str(row[1]).strip() == "Section No."
-            and str(row[2]).strip() == "Pin Torque"
-            and str(row[3]).strip() == "Pin Speed"
-        ):
-            header_row = idx
-            break
-    if header_row is not None:
-        df = pd.read_csv(csv_path, header=header_row)
-        dfs.append(df)
-
-if dfs:
-    combined_df = pd.concat(dfs, ignore_index=True)
-    combined_df.to_csv(file_path, index=False)
-else:
-    print("No files matched the required header conditions.")
+# Read all CSV files from the 'data' directory
+data_dir = "data"
+for filename in os.listdir(data_dir):
+    if filename.endswith(".csv"):
+        file_path = os.path.join(data_dir, filename)
+        with open(file_path, "r", encoding="utf-8") as f:
+            for line in f:
+                row = [cell.strip() for cell in line.strip().split(",")]
+                # Check if the first four columns match the pattern
+                if len(row) >= 4 and row[0] == "Interval" and row[1] == "Section No." and row[2] == "Pin Torque" and row[3] == "Pin Speed":
+                    # All values after the pattern (columns 5+)
+                    new_row = row[4:]
+                    if new_row:
+                        # Pad to match the number of columns if needed
+                        while len(new_row) < len(column_headers):
+                            new_row.append("")
+                        df.loc[len(df)] = new_row[:len(column_headers)]
+# Save the combined cleaned data
+df.to_csv(os.path.join(cleaned_data_dir, new_csv_name), index=False)
