@@ -29,8 +29,8 @@ def on_run():
 
 # Tkinter GUI
 root = tk.Tk()
-root.title("CSV Pin Torque Cleaner")
-
+root.title("PLog Consolidation Tool")
+root.geometry("400x200")
 input_folder_var = tk.StringVar()
 output_file_var = tk.StringVar()
 

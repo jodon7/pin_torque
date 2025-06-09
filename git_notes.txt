@@ -11,3 +11,5 @@ git push
 git checkout  -b branchname
 ## Switching branches
 git checkout branchname
+
+$ python -m PyInstaller gui.py
