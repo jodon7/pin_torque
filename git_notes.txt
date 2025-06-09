@@ -1,3 +1,13 @@
+#Pushing everything to remote repository
 git add --all
 git commit -m "new changes"
 git push
+####
+## Once merge pull requests complete do the following
+git push
+
+
+## Creating a new branch
+git checkout  -b branchname
+## Switching branches
+git checkout branchname

@@ -37,8 +37,3 @@ def process_folder(input_folder, output_file):
         header_written = [False]
         for csv_file in csv_files:
             extract_rows(csv_file, writer, header_written)
-
-input_folder = 'data'  # Replace with your folder path containing CSV files
-output_csv = 'output.csv'  # Replace with your desired output CSV file path
-
-process_folder(input_folder, output_csv)
