@@ -4,15 +4,19 @@ import glob
 
 def extract_rows(input_file, writer, header_written):
     with open(input_file, mode='r', newline='', encoding='utf-8') as infile:
-        reader = csv.reader(infile)
-        start_writing = False
+        reader = list(csv.reader(infile))
+        if not reader or len(reader[0]) < 2:
+            return  # Skip files without enough columns
+        lot_value = reader[0][1]  # Column 2, row 1
+        lot_value_trimmed = lot_value[13:]  # Exclude first 13 characters
 
-        for row in reader:
+        start_writing = False
+        for idx, row in enumerate(reader):
             if len(row) >= 3:
-                # Write header only once
+                # Write header only once, with "Lot" column
                 if row[0] == "Interval" and row[1] == "Section No." and row[2] == "Pin Torque":
                     if not header_written[0]:
-                        writer.writerow(row)
+                        writer.writerow(row + ["Lot"])
                         header_written[0] = True
                     start_writing = True
                     continue  # Skip writing this row again
@@ -20,7 +24,7 @@ def extract_rows(input_file, writer, header_written):
                 if row[0].strip() == "sec" and row[2].strip() == "mV" and row[3].strip() == "mV":
                     continue
             if start_writing:
-                writer.writerow(row)
+                writer.writerow(row + [lot_value_trimmed])
 
 def process_folder(input_folder, output_file):
     csv_files = glob.glob(os.path.join(input_folder, '*.csv'))
