@@ -44,4 +44,11 @@ tk.Button(root, text="Browse...", command=select_output_file).grid(row=1, column
 
 tk.Button(root, text="Run", command=on_run, width=20).grid(row=2, column=0, columnspan=3, pady=10)
 
+# Add note for support email
+tk.Label(
+    root,
+    text="For questions, email john.odonovan@intel.com",
+    fg="blue"
+).grid(row=3, column=0, columnspan=3, pady=(10, 0))
+
 root.mainloop()

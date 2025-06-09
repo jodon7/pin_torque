@@ -20,7 +20,7 @@ def extract_rows(input_file, writer, header_written):
                 # Write header only once, with "Lot", "Parent", "waferID", and "chamber" columns
                 if row[0] == "Interval" and row[1] == "Section No." and row[2] == "Pin Torque":
                     if not header_written[0]:
-                        writer.writerow(row + ["Lot", "Parent", "waferID", "chamber"])
+                        writer.writerow(row + ["Lot", "Parent", "WaferID", "Chamber"])
                         header_written[0] = True
                     start_writing = True
                     continue  # Skip writing this row again
